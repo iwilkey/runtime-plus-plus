@@ -1,5 +1,5 @@
-#ifndef RUNTIME_SRC_WINDOW_H_
-#define RUNTIME_SRC_WINDOW_H_
+#ifndef RUNTIME_SRC_CORE_WINDOW_H_
+#define RUNTIME_SRC_CORE_WINDOW_H_
 
 #include <iostream>
 using namespace std;
@@ -14,6 +14,7 @@ using namespace std;
 class RuntimeWindow {
     public:
 
+        RuntimeWindow();
         RuntimeWindow(int, int, char *);
         ~RuntimeWindow();
 
@@ -21,10 +22,15 @@ class RuntimeWindow {
         SDL_GLContext getGlContext(void);
         int getWidth(void);
         int getHeight(void);
+        float getAspectRatio(void);
         char * getTitle(void);
+
+        void setWidth(int);
+        void setHeight(int);
 
     private:
         int width, height;
+        float aspectRatio;
         char * title;
         SDL_Window * window;
         SDL_GLContext glContext;

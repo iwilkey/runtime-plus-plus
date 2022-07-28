@@ -1,28 +1,45 @@
-#ifndef RUNTIME_SRC_CORE_H_
-#define RUNTIME_SRC_CORE_H_
+#ifndef RUNTIME_SRC_CORE_CORE_H_
+#define RUNTIME_SRC_CORE_CORE_H_
 
 #include <iostream>
+#include <time.h>
+#include <chrono>
 using namespace std;
 
 #include "RuntimeWindow.h"
-#include "RuntimeInput.h"
+#include "RuntimeEvents.h"
+#include "../gfx/RuntimeGUI.h"
+#include "../gfx/RuntimeRenderer.h"
+#include "../state/RuntimeEngineState.h"
 
-#define VERSION "1.0.0"
+enum LogType {
+    SUCCESS,
+    NOTICE,
+    ERROR
+};
 
 class RuntimeCore {
     public:
-        RuntimeCore(int, int, char *);
+        RuntimeCore(RuntimeEngineState *, int, int, char *);
         ~RuntimeCore();
 
-        RuntimeWindow * getWindow(void);
-        RuntimeInput * getInput(void);
-        void stop(void);
+        const static string version;
+
+        static bool running;
+        static unsigned int targetFPS;
+        static double deltaTime;
+
+        static RuntimeWindow * window;
+        static RuntimeEvents * events;
+        static RuntimeGUI * gui;
+        static RuntimeRenderer * renderer;
+        static RuntimeEngineState * currentState;
+
+        static void setState(RuntimeEngineState *);
+        static void log(LogType, string);
+        static void stop(void);
 
     private:
-        RuntimeWindow * window = nullptr;
-        RuntimeInput * input = nullptr;
-        bool running = false;
-
         void run(void);
 };
 

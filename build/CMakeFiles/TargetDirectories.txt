@@ -1,4 +1,0 @@
-/Users/ianwilkey/Desktop/runtime++/build/CMakeFiles/glad.dir
-/Users/ianwilkey/Desktop/runtime++/build/CMakeFiles/runtime++.dir
-/Users/ianwilkey/Desktop/runtime++/build/CMakeFiles/edit_cache.dir
-/Users/ianwilkey/Desktop/runtime++/build/CMakeFiles/rebuild_cache.dir

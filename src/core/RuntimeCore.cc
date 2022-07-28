@@ -1,39 +1,129 @@
-#ifndef RUNTIME_SRC_CORE_CC_
-#define RUNTIME_SRC_CORE_CC_
+#ifndef RUNTIME_SRC_CORE_CORE_CC_
+#define RUNTIME_SRC_CORE_CORE_CC_
 
 #include "RuntimeCore.h"
+#include "../state/implementation/DebugState.h"
 
-RuntimeCore::RuntimeCore(int width, int height, char * title) {
-    RuntimeWindow window(width, height, title);
-    this->window = &window;
-    RuntimeInput input;
-    this->input = &input;
+const string RuntimeCore::version = "1.1.0";
+bool RuntimeCore::running = false;
+unsigned int RuntimeCore::targetFPS = 60.0f;
+double RuntimeCore::deltaTime = (1 / (float)targetFPS);
+RuntimeEvents * RuntimeCore::events = nullptr;
+RuntimeWindow * RuntimeCore::window = nullptr;
+RuntimeGUI * RuntimeCore::gui = nullptr;
+RuntimeRenderer * RuntimeCore::renderer = nullptr;
+RuntimeEngineState * RuntimeCore::currentState = nullptr;
+
+RuntimeCore::RuntimeCore(RuntimeEngineState * entryState, int width, int height, char * title) {
+    
+    if(entryState == nullptr) {
+        log(ERROR, "You must invoke Runtime++ with a valid and concrete RuntimeEngineState.");
+        exit(-1);
+    }
+    
+    // Init window and context.
+    RuntimeWindow win(width, height, title);
+    RuntimeCore::window = &win;
+    
+    // Init input
+    RuntimeEvents in;
+    RuntimeCore::events = &in;
+
+    // Init GUI
+    RuntimeGUI g;
+    RuntimeCore::gui = &g;
+
+    // Init renderer
+    RuntimeRenderer render;
+    RuntimeCore::renderer = &render;
+
+    setState(entryState);
+    
+    // log(NOTICE, "Runtime++ version: " + VERSION);
+    log(SUCCESS, "All Runtime++ processes and contexts created successfully!");
+    run();
 }
 
 RuntimeCore::~RuntimeCore() {}
 
-RuntimeWindow * RuntimeCore::getWindow(void) {
-    return this->window;
-}
-
-RuntimeInput * RuntimeCore::getInput(void) {
-    return this->input;
-}
+void RuntimeCore::setState(RuntimeEngineState * state) {
+    if(RuntimeCore::currentState != nullptr) 
+        RuntimeCore::currentState->end();
+    RuntimeCore::currentState = state;
+    if(RuntimeCore::currentState != nullptr) {
+        RuntimeCore::currentState->begin();
+        log(NOTICE, "Runtime++ engine state is now set to \"" + RuntimeCore::currentState->getName() + "\"");
+        return;
+    }
+    log(NOTICE, "Runtime++ engine state is now set to a NULL state. No instruction will be processed.");
+}   
 
 // Main engine loop lives in here.
 void RuntimeCore::run(void) {
-    this->running = true;
-    while(this->running) {
-        stop();
+    RuntimeCore::running = true;
+
+    auto now = chrono::high_resolution_clock::now(),
+        last = now,
+        dtcn = now,
+        dtcl = now;
+    long long int delta = 0;
+
+    log(NOTICE, "Runtime++ is now running!");
+    while(RuntimeCore::running) {
+        last = now;
+        now = chrono::high_resolution_clock::now();
+        delta += chrono::duration_cast<chrono::nanoseconds>((now - last)).count();
+        if(delta > (1000000000.0f / targetFPS)) {
+            // Clock
+            dtcn = chrono::high_resolution_clock::now();
+            deltaTime = (chrono::duration_cast<chrono::nanoseconds>((dtcn - dtcl)).count()) / 1000000000.0f;
+            dtcl = chrono::high_resolution_clock::now();
+            delta = 0;
+            RuntimeCore::events->pollEvents();
+            if(RuntimeCore::currentState == nullptr) continue;
+            RuntimeCore::currentState->instruction();
+            RuntimeCore::renderer->clear();
+            RuntimeCore::renderer->draw();
+            RuntimeCore::renderer->swapGLBuffers();
+        }
     }
 }
 
 void RuntimeCore::stop(void) {
-    this->running = false;
+    RuntimeCore::running = false;
+    if(RuntimeCore::currentState != nullptr) 
+        RuntimeCore::currentState->end();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+    SDL_GL_DeleteContext(RuntimeCore::window->getGlContext());
+    SDL_DestroyWindow(RuntimeCore::window->getWindow());
+    SDL_Quit();
+    log(SUCCESS, "All Runtime++ processes and contexts disposed of successfully.");
+}
+
+void RuntimeCore::log(LogType type, string message) {
+    switch(type) {
+        #ifdef __APPLE__
+            case SUCCESS: cout << "\x1b[32m[Runtime++ SUCCESS]\x1b[0m "; break;
+            case NOTICE: cout << "\x1b[33m[Runtime++ NOTICE]\x1b[0m "; break;
+            case ERROR: cout << "\x1b[31m[Runtime++ ERROR]\x1b[0m "; break;
+        #elif __linux__
+            case SUCCESS: cout << "\033m[32m[Runtime++ SUCCESS]\033[0m "; break;
+            case NOTICE: cout << "\033m[33m[Runtime++ NOTICE]\033[0m "; break;
+            case ERROR: cout << "\033m[31m[Runtime++ ERROR]\033[0m "; break;
+        #elif _WIN32
+            case SUCCESS: cout << "\033m[32m[Runtime++ SUCCESS]\033[0m "; break;
+            case NOTICE: cout << "\033m[33m[Runtime++ NOTICE]\033[0m "; break;
+            case ERROR: cout << "\033m[31m[Runtime++ ERROR]\033[0m "; break;
+        #endif
+    }
+    cout << message << endl;
 }
 
 int main(void) {
-    RuntimeCore core(1080, 720, (char *)"Runtime");
+    DebugState debug;
+    RuntimeCore core(&debug, 1080, 720, (char *)"Runtime");
 }
 
 #endif

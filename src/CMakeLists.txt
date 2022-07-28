@@ -54,8 +54,16 @@ include_directories(
 set(sources
     core/RuntimeWindow.h
     core/RuntimeWindow.cc
-    core/RuntimeInput.h
-    core/RuntimeInput.cc
+    core/RuntimeEvents.h
+    core/RuntimeEvents.cc
+    gfx/RuntimeGUI.h
+    gfx/RuntimeGUI.cc
+    gfx/RuntimeRenderer.h
+    gfx/RuntimeRenderer.cc
+    state/RuntimeEngineState.h
+    state/RuntimeEngineState.cc
+    state/implementation/DebugState.h
+    state/implementation/DebugState.cc
     core/RuntimeCore.h
     core/RuntimeCore.cc
     ../lib/imgui/imconfig.h
