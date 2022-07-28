@@ -44,12 +44,24 @@ void RuntimeGUI::debugEngineControl(void) {
           RuntimeCore::targetFPS = targFPS[0];
     if(guiScale[0] != RuntimeCore::gui->getScale())
         RuntimeCore::gui->setScale(guiScale[0]);
-    ImGui::Begin("Runtime++ Debug Engine Control", (bool *)true, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Begin("Runtime++ Debug Engine Control", (bool *)true, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar);
+    ImGui::Text("%s", "Runtime++ Debug Engine Control");
     ImGui::Text("%s", ("Runtime++ version: " + RuntimeCore::version).c_str());
     ImGui::SliderInt("Runtime++ target FPS", targFPS, 1, 120);
     ImGui::Text("%s", ("Runtime++ current FPS: " + to_string(1.0f / RuntimeCore::deltaTime)).c_str());
     ImGui::Text("%s", ("Runtime++ current SPF (delta time): " + to_string(RuntimeCore::deltaTime)).c_str());
     ImGui::SliderFloat("Runtime++ GUI scale", guiScale, 0.25f, 10);
+    ImGui::Text("%s", ("Runtime++ window dimensions (width, height): " + to_string(RuntimeCore::window->getWidth()) 
+        + ", " + to_string(RuntimeCore::window->getHeight())).c_str());
+    ImGui::Text("%s", ("Runtime++ window aspect ratio: " + to_string(RuntimeCore::window->getAspectRatio())).c_str());
+    ImGui::End();
+}
+
+void RuntimeGUI::debugInputStatus(void) {
+    ImGui::Begin("Runtime++ Debug Input Status", (bool *)true, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar);
+    ImGui::Text("%s", "Runtime++ Debug Input Status");
+    ImGui::Text("%s", ("Cursor coordinates (x, y): " + to_string(RuntimeCore::events->getCursorX()) 
+        + ", " + to_string(RuntimeCore::events->getCursorY())).c_str());
     ImGui::End();
 }
 

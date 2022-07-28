@@ -12,6 +12,10 @@ RuntimeEvents::~RuntimeEvents() {
     RuntimeCore::log(SUCCESS, "RuntimeInput object destruction complete!");
 }
 
+bool keyState[512] = { 0 },
+    keyStateJustDown[512] = { 0 },
+    keyStateJustUp[512] = { 0 };
+int cursorX, cursorY;
 void RuntimeEvents::pollEvents(void) {
     SDL_Event event;
     while(SDL_PollEvent(&event)) {
@@ -33,16 +37,47 @@ void RuntimeEvents::pollEvents(void) {
                 }
                 break;
             case SDL_KEYDOWN:
-                switch(event.key.keysym.sym) {
-                    case SDLK_ESCAPE:
-                        RuntimeCore::stop();
-                        goto done;
-                        break;
-                }
+                keyState[event.key.keysym.sym] = true;
+                keyStateJustDown[event.key.keysym.sym] = true;
+                break;
+            case SDL_KEYUP:
+                keyState[event.key.keysym.sym] = false;
+                keyStateJustUp[event.key.keysym.sym] = true;
+                break;
+            case SDL_MOUSEMOTION:
+                cursorX = event.motion.x;
+                cursorY = event.motion.y;
                 break;
         }
     }
     done:;
+}
+
+void RuntimeEvents::flush(void) {
+    for(int i = 0; i < 512; i++) {
+        keyStateJustDown[i] = false;
+        keyStateJustUp[i] = false;
+    }
+}
+
+bool RuntimeEvents::keyIsDown(int key) {
+    return keyState[key];
+}
+
+bool RuntimeEvents::keyJustPressed(int key) {
+    return keyStateJustDown[key];
+}
+
+bool RuntimeEvents::keyJustReleased(int key) {
+    return keyStateJustUp[key];
+}
+
+int RuntimeEvents::getCursorX(void) {
+    return cursorX;
+}
+
+int RuntimeEvents::getCursorY(void) {
+    return cursorY;
 }
 
 #endif

@@ -15,6 +15,14 @@ class RuntimeEvents {
         ~RuntimeEvents();
 
         void pollEvents(void);
+        void flush(void);
+        
+        bool keyIsDown(int);
+        bool keyJustPressed(int);
+        bool keyJustReleased(int);
+        int getCursorX(void);
+        int getCursorY(void);
+
     private:
 };
 

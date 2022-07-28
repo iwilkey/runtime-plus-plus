@@ -4,7 +4,7 @@
 #include "RuntimeCore.h"
 #include "../state/implementation/DebugState.h"
 
-const string RuntimeCore::version = "1.1.0";
+const string RuntimeCore::version = "1.1.1";
 bool RuntimeCore::running = false;
 unsigned int RuntimeCore::targetFPS = 60.0f;
 double RuntimeCore::deltaTime = (1 / (float)targetFPS);
@@ -82,6 +82,7 @@ void RuntimeCore::run(void) {
             RuntimeCore::events->pollEvents();
             if(RuntimeCore::currentState == nullptr) continue;
             RuntimeCore::currentState->instruction();
+            RuntimeCore::events->flush();
             RuntimeCore::renderer->clear();
             RuntimeCore::renderer->draw();
             RuntimeCore::renderer->swapGLBuffers();

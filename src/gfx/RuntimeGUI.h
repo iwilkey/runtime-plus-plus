@@ -23,6 +23,7 @@ class RuntimeGUI {
 
         // onGUI presets...
         void debugEngineControl(void);
+        void debugInputStatus(void);
         
     private:
         float scale;

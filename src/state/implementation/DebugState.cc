@@ -11,11 +11,13 @@ void DebugState::begin(void) {
 }
 
 void DebugState::instruction(void) {
-
+     if(RuntimeCore::events->keyJustPressed(SDLK_ESCAPE))
+          RuntimeCore::stop();
 }
 
 void DebugState::onGUI(void) {
      RuntimeCore::gui->debugEngineControl();
+     RuntimeCore::gui->debugInputStatus();
 }
 
 void DebugState::end(void) {
