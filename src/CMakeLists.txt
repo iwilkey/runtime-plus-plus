@@ -52,6 +52,8 @@ include_directories(
 
 # your sources
 set(sources
+    utils/RuntimeUtilities.h
+    utils/RuntimeUtilities.cc
     core/RuntimeWindow.h
     core/RuntimeWindow.cc
     core/RuntimeEvents.h

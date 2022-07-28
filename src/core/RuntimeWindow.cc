@@ -110,7 +110,7 @@ float RuntimeWindow::getAspectRatio(void) {
 }
 
 void RuntimeWindow::setWidth(int width) {
-    if(width >= 0) {
+    if(width <= 0) {
         RuntimeCore::log(ERROR, "You cannot set the window width to less than or equal to zero!");
         return;
     }
@@ -119,7 +119,7 @@ void RuntimeWindow::setWidth(int width) {
 }
 
 void RuntimeWindow::setHeight(int height) {
-    if(height >= 0) {
+    if(height <= 0) {
         RuntimeCore::log(ERROR, "You cannot set the window height to less than or equal to zero!");
         return;
     }

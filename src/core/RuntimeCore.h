@@ -6,6 +6,7 @@
 #include <chrono>
 using namespace std;
 
+#include "../utils/RuntimeUtilities.h"
 #include "RuntimeWindow.h"
 #include "RuntimeEvents.h"
 #include "../gfx/RuntimeGUI.h"
@@ -29,6 +30,7 @@ class RuntimeCore {
         static unsigned int targetFPS;
         static double deltaTime;
 
+        static RuntimeUtilities * utilities;
         static RuntimeWindow * window;
         static RuntimeEvents * events;
         static RuntimeGUI * gui;

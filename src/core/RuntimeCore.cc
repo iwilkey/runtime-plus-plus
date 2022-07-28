@@ -4,10 +4,12 @@
 #include "RuntimeCore.h"
 #include "../state/implementation/DebugState.h"
 
-const string RuntimeCore::version = "1.1.1";
+const string RuntimeCore::version = "1.1.2";
 bool RuntimeCore::running = false;
 unsigned int RuntimeCore::targetFPS = 60.0f;
 double RuntimeCore::deltaTime = (1 / (float)targetFPS);
+
+RuntimeUtilities * RuntimeCore::utilities = nullptr;
 RuntimeEvents * RuntimeCore::events = nullptr;
 RuntimeWindow * RuntimeCore::window = nullptr;
 RuntimeGUI * RuntimeCore::gui = nullptr;
@@ -21,7 +23,11 @@ RuntimeCore::RuntimeCore(RuntimeEngineState * entryState, int width, int height,
         exit(-1);
     }
     
-    // Init window and context.
+    // Init utilities
+    RuntimeUtilities utils;
+    RuntimeCore::utilities = &utils;
+
+    // Init window and context
     RuntimeWindow win(width, height, title);
     RuntimeCore::window = &win;
     
@@ -82,10 +88,10 @@ void RuntimeCore::run(void) {
             RuntimeCore::events->pollEvents();
             if(RuntimeCore::currentState == nullptr) continue;
             RuntimeCore::currentState->instruction();
-            RuntimeCore::events->flush();
             RuntimeCore::renderer->clear();
             RuntimeCore::renderer->draw();
             RuntimeCore::renderer->swapGLBuffers();
+            RuntimeCore::events->flush();
         }
     }
 }
