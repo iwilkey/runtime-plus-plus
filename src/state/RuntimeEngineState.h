@@ -8,7 +8,7 @@ class RuntimeEngineState {
     public:
         RuntimeEngineState(string);
         RuntimeEngineState();
-        ~RuntimeEngineState();
+        virtual ~RuntimeEngineState();
 
         virtual void begin(void) = 0;
         virtual void instruction(void) = 0;

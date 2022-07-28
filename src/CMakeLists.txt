@@ -56,6 +56,10 @@ set(sources
     utils/RuntimeUtilities.cc
     core/RuntimeWindow.h
     core/RuntimeWindow.cc
+    process/RProcess.h
+    process/RProcess.cc
+    process/RuntimeProcessManager.h
+    process/RuntimeProcessManager.cc
     core/RuntimeEvents.h
     core/RuntimeEvents.cc
     gfx/RuntimeGUI.h

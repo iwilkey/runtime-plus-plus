@@ -8,6 +8,7 @@ using namespace std;
 
 #include "../utils/RuntimeUtilities.h"
 #include "RuntimeWindow.h"
+#include "../process/RuntimeProcessManager.h"
 #include "RuntimeEvents.h"
 #include "../gfx/RuntimeGUI.h"
 #include "../gfx/RuntimeRenderer.h"
@@ -32,6 +33,7 @@ class RuntimeCore {
 
         static RuntimeUtilities * utilities;
         static RuntimeWindow * window;
+        static RuntimeProcessManager * processes;
         static RuntimeEvents * events;
         static RuntimeGUI * gui;
         static RuntimeRenderer * renderer;

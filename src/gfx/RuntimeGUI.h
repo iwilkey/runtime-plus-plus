@@ -10,7 +10,10 @@ using namespace std;
 #include "../../lib/imgui/imgui.h"
 #include "../../lib/imgui/imgui_impl_opengl3.h"
 
+#include "../process/RProcess.h"
+
 class RuntimeGUI {
+
     public:
         RuntimeGUI();
         ~RuntimeGUI();
