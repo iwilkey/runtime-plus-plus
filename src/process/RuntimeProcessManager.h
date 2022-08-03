@@ -13,11 +13,13 @@ class RuntimeProcessManager {
         ~RuntimeProcessManager();
 
         void tick(void);
-        void addProcess(RProcess *);
-        void removeProcess(RProcess *);
+        void addProcess(string, double);
+        void removeProcess(string);
+        int getActiveProcess(string);
+        bool isActive(string);
         
     private:
-        vector<RProcess *> activeProcesses;
+        vector<RProcess> activeProcesses;
 };
 
 #endif

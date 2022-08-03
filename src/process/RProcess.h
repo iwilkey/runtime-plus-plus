@@ -6,21 +6,20 @@ using namespace std;
 
 class RProcess {
     public:
-
         RProcess(string, double);
-        RProcess();
-        virtual ~RProcess();
-
-        virtual void begin(void) = 0;
-        virtual void during(void) = 0;
-        virtual void end(void) = 0;
+        ~RProcess();
 
         void tick(double dt);
+        void kill(void);
+        bool isDead(void);
         double getCurrentSeconds(void);
+        void setCurrentSeconds(double);
+        string getName(void);
 
     private:
         string name;
         double secondsRuntime; // How long will the process run (in seconds)? (Neg for indefinite).
+        bool shouldDie = false;
 };
 
 #endif

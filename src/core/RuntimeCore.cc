@@ -136,7 +136,7 @@ void RuntimeCore::log(LogType type, string message) {
 
 int main(void) {
     DebugState debug;
-    RuntimeCore core(&debug, 1080, 720, (char *)"Runtime");
+    RuntimeCore core(&debug, 1280, 720, (char *)"Runtime");
 }
 
 #endif

@@ -51,11 +51,16 @@ void RuntimeGUI::debugEngineControl(void) {
     ImGui::Text("%s", ("Runtime++ current FPS: " + to_string(1.0f / RuntimeCore::deltaTime)).c_str());
     ImGui::Text("%s", ("Runtime++ current SPF (delta time): " + to_string(RuntimeCore::deltaTime)).c_str());
     ImGui::SliderFloat("Runtime++ GUI scale", guiScale, 0.25f, 10);
-    if(RuntimeCore::events->windowJustResized()) {
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(255, 0, 0)));
+
+    // An example of using Runtime++ processes...
+    if(RuntimeCore::events->windowJustResized()) 
+        RuntimeCore::processes->addProcess("show-window", 3.0f);
+    if(RuntimeCore::processes->isActive("show-window")) {
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(0, 0, 255)));
         ImGui::Text("%s", "Runtime++ window just resized.");
         ImGui::PopStyleColor(1);
     }
+
     ImGui::Text("%s", ("Runtime++ window dimensions (width, height): " + to_string(RuntimeCore::window->getWidth()) 
         + ", " + to_string(RuntimeCore::window->getHeight())).c_str());
     ImGui::Text("%s", ("Runtime++ window aspect ratio: " + to_string(RuntimeCore::window->getAspectRatio())).c_str());
