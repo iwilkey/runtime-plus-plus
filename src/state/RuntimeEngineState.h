@@ -12,6 +12,7 @@ class RuntimeEngineState {
 
         virtual void begin(void) = 0;
         virtual void instruction(void) = 0;
+        virtual void renderContext(void) = 0;
         virtual void onGUI(void) = 0;
         virtual void end(void) = 0;
 

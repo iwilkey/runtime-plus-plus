@@ -12,6 +12,7 @@ class DebugState : public RuntimeEngineState {
 
         void begin(void) override;
         void instruction(void) override;
+        void renderContext(void) override;
         void onGUI(void) override;
         void end(void) override;
 

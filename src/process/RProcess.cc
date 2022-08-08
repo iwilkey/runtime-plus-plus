@@ -40,3 +40,4 @@ string RProcess::getName(void) {
 }
 
 #endif
+

@@ -43,6 +43,9 @@ void RuntimeRenderer::clear(void) {
 
 void RuntimeRenderer::draw(void) {
     // Draw game stuff...
+
+    // Render contexts will go here.
+    RuntimeCore::currentState->renderContext();
     
     // Draw GUI...
     RuntimeCore::gui->newGUIFrame();

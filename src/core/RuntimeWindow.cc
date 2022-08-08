@@ -87,7 +87,7 @@ RuntimeWindow::RuntimeWindow(int width, int height, char * title) {
         exit(-1);
     } else RuntimeCore::log(SUCCESS, "GLAD initialized successfully!");
 
-    glViewport(0, 0, this->width, this->height);
+    // glViewport(0, 0, this->width, this->height);
 
     // Init IMGUI in the window context.
     IMGUI_CHECKVERSION();

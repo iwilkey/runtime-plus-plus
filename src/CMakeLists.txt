@@ -114,11 +114,3 @@ else()
             )
     endif()
 endif()
-
-# copy font file to the build directory
-#add_custom_command(
- #       TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-  #      COMMAND ${CMAKE_COMMAND} -E copy
-   #             ${CMAKE_SOURCE_DIR}/verdana.ttf
-    #            ${CMAKE_CURRENT_BINARY_DIR}/verdana.ttf
-     #           )
