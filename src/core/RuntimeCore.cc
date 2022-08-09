@@ -4,7 +4,7 @@
 #include "RuntimeCore.h"
 #include "../state/implementation/DebugState.h"
 
-const string RuntimeCore::version = "1.1.5";
+const string RuntimeCore::version = "1.1.6";
 bool RuntimeCore::running = false;
 unsigned int RuntimeCore::targetFPS = 60.0f;
 double RuntimeCore::deltaTime = (1 / (float)targetFPS);

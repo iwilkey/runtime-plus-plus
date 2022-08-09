@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
 using namespace std;
  
 class RuntimeUtilities {
@@ -26,6 +27,8 @@ class RuntimeUtilities {
             list.erase(list.begin() + i);
             return true;
         }
+
+        string loadStringFromFile(string);
 
     private:
 };

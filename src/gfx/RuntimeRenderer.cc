@@ -57,4 +57,29 @@ void RuntimeRenderer::swapGLBuffers(void) {
     SDL_GL_SwapWindow(RuntimeCore::window->getWindow());
 }
 
+GLuint RuntimeRenderer::addShaderSource(string name, GLenum type, const char * source) {
+    GLuint shader = glCreateShader(type);
+    glShaderSource(shader, 1, &source, NULL);
+    glCompileShader(shader);
+    GLint status;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+    if(status != GL_TRUE) {
+        char buffer[512];
+        glGetShaderInfoLog(shader, 512, NULL, buffer);
+        RuntimeCore::log(ERROR, "Runtime++ encountered a fatal error while trying to compile a shader! Please see more information below...");
+        cout << buffer << endl;
+        RuntimeCore::stop();
+    }
+    this->shaders.push_back(make_pair(name, shader));
+    return shader;
+}
+
+GLuint RuntimeRenderer::getShader(string name) {
+    for(pair<string, GLuint> entry : shaders)
+        if(entry.first == name)
+            return entry.second;
+    RuntimeCore::log(ERROR, "Runtime++ is trying to return a shader that does not exist.");
+    return 0;
+}
+
 #endif
