@@ -97,6 +97,7 @@ void NewRuntimeState::glRender(void) {
 void NewRuntimeState::guiRender(void) {
      RuntimeCore::gui->debugEngineControl();
      RuntimeCore::gui->debugInputStatus();
+     RuntimeCore::gui->debugConsole();
 }
 
 void NewRuntimeState::onEnd(void) {
