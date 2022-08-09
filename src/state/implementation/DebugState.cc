@@ -5,7 +5,7 @@
 #include "../../core/RuntimeCore.h"
 
 // How to include SOIL...
-#include "../../../lib/SOIL/src/SOIL.h"
+// #include "../../../lib/SOIL/src/SOIL.h"
 
 DebugState::DebugState() : RuntimeEngineState("Debug") {}
 
