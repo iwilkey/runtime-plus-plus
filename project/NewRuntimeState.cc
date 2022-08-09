@@ -1,22 +1,22 @@
-#ifndef RUNTIME_SRC_STATE_IMPLEMENTATION_DEBUG_CC_
-#define RUNTIME_SRC_STATE_IMPLEMENTATION_DEBUG_CC_
+#ifndef RUNTIME_PROJECT_NEW_RUNTIME_STATE_CC_
+#define RUNTIME_PROJECT_NEW_RUNTIME_STATE_CC_
 
-#include "DebugState.h"
-#include "../../core/RuntimeCore.h"
+#include "NewRuntimeState.h"
+#include "../src/core/RuntimeCore.h"
 
 // How to include SOIL...
 // #include "../../../lib/SOIL/src/SOIL.h"
 
-DebugState::DebugState() : RuntimeEngineState("Debug") {}
+NewRuntimeState::NewRuntimeState() : RuntimeEngineState("NewRuntimeState") {}
 
-// Simple triangle vertices.
+// Simple triangle vertices in OpenGL device coordinates.
 float vertices[] = {
-    -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
-     0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
-     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
-    -0.5f, -0.5f, 1.0f, 1.0f, 1.0f  // Bottom-left
+    -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, // Top-left, Red
+     1.0f,  1.0f, 0.0f, 1.0f, 0.0f, // Top-right, Green
+     1.0f, -1.0f, 0.0f, 0.0f, 1.0f, // Bottom-right, Blue
+    -1.0f, -1.0f, 1.0f, 1.0f, 1.0f  // Bottom-left, White
 };
-
+ // Draw rectangle with two triangles clockwise from top left (OpenGL convention).
 GLuint elements[] = {
     0, 1, 2,
     2, 3, 0
@@ -27,7 +27,7 @@ GLuint shaderProgram,
      vao,
      ebo;
 
-void DebugState::begin(void) {
+void NewRuntimeState::onBegin(void) {
 
      // Create VAO...
      glGenVertexArrays(1, &vao);
@@ -85,21 +85,21 @@ void DebugState::begin(void) {
      RuntimeCore::log(SUCCESS, "Debug state loaded successfully.");
 }
 
-void DebugState::instruction(void) {
+void NewRuntimeState::onInstruction(void) {
      if(RuntimeCore::events->keyJustPressed(SDLK_ESCAPE))
           RuntimeCore::stop();
 }
 
-void DebugState::renderContext(void) {
+void NewRuntimeState::glRender(void) {
      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void DebugState::onGUI(void) {
+void NewRuntimeState::guiRender(void) {
      RuntimeCore::gui->debugEngineControl();
      RuntimeCore::gui->debugInputStatus();
 }
 
-void DebugState::end(void) {
+void NewRuntimeState::onEnd(void) {
      glDeleteProgram(shaderProgram);
      glDeleteShader(RuntimeCore::renderer->getShader("simple-fragment"));
      glDeleteShader(RuntimeCore::renderer->getShader("simple-vertex"));

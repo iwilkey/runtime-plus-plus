@@ -2,7 +2,6 @@
 #define RUNTIME_SRC_CORE_CORE_CC_
 
 #include "RuntimeCore.h"
-#include "../state/implementation/DebugState.h"
 
 const string RuntimeCore::version = "1.1.6";
 bool RuntimeCore::running = false;
@@ -59,10 +58,10 @@ RuntimeCore::~RuntimeCore() {}
 
 void RuntimeCore::setState(RuntimeEngineState * state) {
     if(RuntimeCore::currentState != nullptr) 
-        RuntimeCore::currentState->end();
+        RuntimeCore::currentState->onEnd();
     RuntimeCore::currentState = state;
     if(RuntimeCore::currentState != nullptr) {
-        RuntimeCore::currentState->begin();
+        RuntimeCore::currentState->onBegin();
         log(NOTICE, "Runtime++ engine state is now set to \"" + RuntimeCore::currentState->getName() + "\"");
         return;
     }
@@ -92,7 +91,7 @@ void RuntimeCore::run(void) {
             delta = 0;
             RuntimeCore::events->pollEvents();
             if(RuntimeCore::currentState == nullptr) continue;
-            RuntimeCore::currentState->instruction();
+            RuntimeCore::currentState->onInstruction();
             RuntimeCore::processes->tick();
             RuntimeCore::renderer->clear();
             RuntimeCore::renderer->draw();
@@ -105,7 +104,7 @@ void RuntimeCore::run(void) {
 void RuntimeCore::stop(void) {
     RuntimeCore::running = false;
     if(RuntimeCore::currentState != nullptr) 
-        RuntimeCore::currentState->end();
+        RuntimeCore::currentState->onEnd();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
@@ -132,11 +131,6 @@ void RuntimeCore::log(LogType type, string message) {
         #endif
     }
     cout << message << endl;
-}
-
-int main(void) {
-    DebugState debug;
-    RuntimeCore core(&debug, 1280, 720, (char *)"Runtime");
 }
 
 #endif

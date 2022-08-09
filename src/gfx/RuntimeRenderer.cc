@@ -42,14 +42,11 @@ void RuntimeRenderer::clear(void) {
 }
 
 void RuntimeRenderer::draw(void) {
-    // Draw game stuff...
-
     // Render contexts will go here.
-    RuntimeCore::currentState->renderContext();
-    
+    RuntimeCore::currentState->glRender();
     // Draw GUI...
     RuntimeCore::gui->newGUIFrame();
-    RuntimeCore::currentState->onGUI();
+    RuntimeCore::currentState->guiRender();
     RuntimeCore::gui->renderGUI();
 }
 

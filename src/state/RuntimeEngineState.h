@@ -10,11 +10,11 @@ class RuntimeEngineState {
         RuntimeEngineState();
         virtual ~RuntimeEngineState();
 
-        virtual void begin(void) = 0;
-        virtual void instruction(void) = 0;
-        virtual void renderContext(void) = 0;
-        virtual void onGUI(void) = 0;
-        virtual void end(void) = 0;
+        virtual void onBegin(void) = 0;
+        virtual void onInstruction(void) = 0;
+        virtual void glRender(void) = 0;
+        virtual void guiRender(void) = 0;
+        virtual void onEnd(void) = 0;
 
         string getName(void);
 

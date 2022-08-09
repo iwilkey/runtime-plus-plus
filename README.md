@@ -1,6 +1,6 @@
 # Runtime++
 
-Runtime++ is a fast, efficient, easy-to-use, and open-source C++ interactive application framework. It is intended for the fast creation of reactive and reliable applications such as 2D/3D video games, general software applications, or any other reasonable "creative coding" endeavors. It offers support of well-known and powerful tools such as x, and the CMake build system offers fast and easy multiplatform compilation for Windows/OSX/Linux.
+Runtime++ is a fast, efficient, easy-to-use, and open-source C++ interactive application framework. It is intended for the fast creation of reactive and reliable applications such as 2D/3D video games, general software applications, or any other reasonable "creative coding" endeavors. It offers support of well-known and powerful tools such as SDL, OpenGL, GLAD, SOIL, Dear Imgui, and the CMake build system offers fast and easy multiplatform compilation for Windows/OSX/Linux.
 
 ## Built for Creative Coders
 
@@ -33,6 +33,8 @@ The Runtime++ build system fundamentally utilizes CMake, and there are a couple 
 ```bash
 # Homebrew required! If not, use the following line to install...
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# CMake: Required...
+brew install cmake
 # OpenGL: Required...
 brew install glfw3 && brew install glew
 # SDL2: Required...
@@ -41,8 +43,8 @@ brew install SDL2
 
 ### Linux
 ```bash
-# Optional: Update apt-get...
-sudo apt-get update
+# CMake: Required...
+sudo apt-get install cmake
 # OpenGL: Required...
 sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
 # SDL2: Required...
