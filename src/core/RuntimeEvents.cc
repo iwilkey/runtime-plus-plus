@@ -33,8 +33,10 @@ void RuntimeEvents::pollEvents(void) {
             case SDL_WINDOWEVENT:
                 switch(event.window.event) {
                     case SDL_WINDOWEVENT_RESIZED:
+                        float denom = 1200.0f * 720;
                         RuntimeCore::window->setWidth(event.window.data1);
                         RuntimeCore::window->setHeight(event.window.data2);
+                        RuntimeCore::gui->setScale(((float)event.window.data1 * event.window.data2) / denom);
                         RuntimeCore::log(NOTICE, ("Runtime++ window resized to (" 
                             + to_string(event.window.data1) + ", " + to_string(event.window.data2) + ")").c_str());
                         windowResizeThisFrame = true;

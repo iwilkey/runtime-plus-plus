@@ -7,8 +7,8 @@ using namespace std;
 
 #include <SDL2/SDL.h>
 
-#include "../../lib/imgui/imgui.h"
-#include "../../lib/imgui/imgui_impl_sdl.h"
+#include "../../runtime-plus-plus-libraries/imgui-sdl-static/imgui.h"
+#include "../../runtime-plus-plus-libraries/imgui-sdl-static/imgui_impl_sdl.h"
 
 class RuntimeEvents {
     public:

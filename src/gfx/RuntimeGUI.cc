@@ -42,15 +42,13 @@ float guiScale[] = { 1.0f };
 void RuntimeGUI::debugEngineControl(void) {
     if(targFPS[0] != RuntimeCore::targetFPS)
           RuntimeCore::targetFPS = targFPS[0];
-    if(guiScale[0] != RuntimeCore::gui->getScale())
-        RuntimeCore::gui->setScale(guiScale[0]);
-    ImGui::Begin("Runtime++ Debug Engine Control", (bool *)true, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar);
+    ImGui::Begin("Runtime++ Engine Control", (bool *)true, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar);
     ImGui::Text("%s", "Runtime++ Debug Engine Control");
     ImGui::Text("%s", ("Runtime++ version: " + RuntimeCore::version).c_str());
     ImGui::SliderInt("Runtime++ target FPS", targFPS, 1, 120);
     ImGui::Text("%s", ("Runtime++ current FPS: " + to_string(1.0f / RuntimeCore::deltaTime)).c_str());
     ImGui::Text("%s", ("Runtime++ current SPF (delta time): " + to_string(RuntimeCore::deltaTime)).c_str());
-    ImGui::SliderFloat("Runtime++ GUI scale", guiScale, 0.25f, 10);
+    ImGui::Text("%s", ("Runtime++ current GUI scale: " + to_string(RuntimeCore::gui->getScale())).c_str());
 
     // An example of using Runtime++ processes...
     if(RuntimeCore::events->windowJustResized()) 
@@ -68,7 +66,7 @@ void RuntimeGUI::debugEngineControl(void) {
 }
 
 void RuntimeGUI::debugInputStatus(void) {
-    ImGui::Begin("Runtime++ Debug Input Status", (bool *)true, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar);
+    ImGui::Begin("Runtime++ Input Status", (bool *)true, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar);
     ImGui::Text("%s", "Runtime++ Debug Input Status");
 
     // Active keys
@@ -118,6 +116,12 @@ void RuntimeGUI::debugInputStatus(void) {
         ImGui::Text("%s", (" Found (" + to_string(activeCursors.size()) + ") active cursor button(s).").c_str());
     }
 
+    ImGui::End();
+}
+
+void RuntimeGUI::debugConsole(void) {
+    ImGui::Begin("Runtime++ Console", (bool *)true, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar);
+    
     ImGui::End();
 }
 

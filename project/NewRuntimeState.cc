@@ -5,16 +5,20 @@
 #include "../src/core/RuntimeCore.h"
 
 // How to include SOIL...
-// #include "../../../lib/SOIL/src/SOIL.h"
+#include "../runtime-plus-plus-libraries/soil-static/SOIL.h"
+
+#include "../runtime-plus-plus-libraries/glm-static/glm.hpp"
+#include "../runtime-plus-plus-libraries/glm-static/gtc/matrix_transform.hpp"
+#include "../runtime-plus-plus-libraries/glm-static/gtc/type_ptr.hpp"
 
 NewRuntimeState::NewRuntimeState() : RuntimeEngineState("NewRuntimeState") {}
 
-// Simple triangle vertices in OpenGL device coordinates.
-float vertices[] = {
-    -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, // Top-left, Red
-     1.0f,  1.0f, 0.0f, 1.0f, 0.0f, // Top-right, Green
-     1.0f, -1.0f, 0.0f, 0.0f, 1.0f, // Bottom-right, Blue
-    -1.0f, -1.0f, 1.0f, 1.0f, 1.0f  // Bottom-left, White
+GLfloat vertices[] = {
+//  Position      Color             Texcoords
+    -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
+     0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
+     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+    -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
 };
  // Draw rectangle with two triangles clockwise from top left (OpenGL convention).
 GLuint elements[] = {
@@ -25,7 +29,8 @@ GLuint elements[] = {
 GLuint shaderProgram,
      vbo,
      vao,
-     ebo;
+     ebo,
+     tex;
 
 void NewRuntimeState::onBegin(void) {
 
@@ -47,11 +52,16 @@ void NewRuntimeState::onBegin(void) {
      // Vertex...
      RuntimeCore::renderer->addShaderSource("simple-vertex", GL_VERTEX_SHADER, R"glsl(
           #version 150 core
+
           in vec2 position;
           in vec3 color;
+          in vec2 texcoord;
           out vec3 Color;
+          out vec2 Texcoord;
+
           void main() {
                Color = color;
+               Texcoord = texcoord;
                gl_Position = vec4(position, 0.0, 1.0);
           }
      )glsl");
@@ -60,9 +70,11 @@ void NewRuntimeState::onBegin(void) {
      RuntimeCore::renderer->addShaderSource("simple-fragment", GL_FRAGMENT_SHADER, R"glsl(
           #version 150 core
           in vec3 Color;
+          in vec2 Texcoord;
           out vec4 outColor;
+          uniform sampler2D tex;
           void main() {
-               outColor = vec4(Color, 1.0);
+               outColor = texture(tex, Texcoord);
           }
      )glsl");
 
@@ -73,14 +85,32 @@ void NewRuntimeState::onBegin(void) {
      glLinkProgram(shaderProgram);
      glUseProgram(shaderProgram);
 
+     // Specify the layout of the vertex data
      GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
      glEnableVertexAttribArray(posAttrib);
-     glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE,
-                         5 * sizeof(float), 0);
+     glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
+
      GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
      glEnableVertexAttribArray(colAttrib);
-     glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE,
-                         5 * sizeof(float), (void *)(2 * sizeof(float)));
+     glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+
+     GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
+     glEnableVertexAttribArray(texAttrib);
+     glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+
+     // Load texture
+     glGenTextures(1, &tex);
+     glBindTexture(GL_TEXTURE_2D, tex);
+
+     int width, height;
+     unsigned char * image = SOIL_load_image("../resources/cat.png", &width, &height, 0, SOIL_LOAD_RGBA);
+     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+     SOIL_free_image_data(image);
+
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
      RuntimeCore::log(SUCCESS, "Debug state loaded successfully.");
 }
@@ -97,7 +127,6 @@ void NewRuntimeState::glRender(void) {
 void NewRuntimeState::guiRender(void) {
      RuntimeCore::gui->debugEngineControl();
      RuntimeCore::gui->debugInputStatus();
-     RuntimeCore::gui->debugConsole();
 }
 
 void NewRuntimeState::onEnd(void) {
@@ -107,6 +136,7 @@ void NewRuntimeState::onEnd(void) {
      glDeleteBuffers(1, &vbo);
      glDeleteVertexArrays(1, &vao);
      glDeleteBuffers(1, &ebo);
+     glDeleteTextures(1, &tex);
      RuntimeCore::log(SUCCESS, "\"Debug\" engine state ended successfully.");
 }
 
